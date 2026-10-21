@@ -1,0 +1,15 @@
+{
+  "name": "crosscheck",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Claude Code and Codex consult each other as skeptical, read-only peer reviewers (MCP server + skill).",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node --test test/crosscheck.test.mjs",
+    "smoke:codex": "node scripts/smoke.mjs codex",
+    "smoke:claude": "node scripts/smoke.mjs claude"
+  }
+}

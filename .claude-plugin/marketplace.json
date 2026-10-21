@@ -1,0 +1,15 @@
+{
+  "name": "crosscheck",
+  "owner": {
+    "name": "chengming.ouyang"
+  },
+  "description": "Cross-model second opinions between Claude Code and Codex, with a skeptical verification protocol on both sides.",
+  "plugins": [
+    {
+      "name": "crosscheck",
+      "source": "./",
+      "description": "Claude Code and Codex consult each other as skeptical, read-only peer reviewers.",
+      "category": "development"
+    }
+  ]
+}

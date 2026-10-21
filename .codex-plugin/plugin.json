@@ -1,0 +1,64 @@
+{
+  "name": "crosscheck",
+  "version": "0.1.0",
+  "description": "Consult Claude as a skeptical, read-only peer reviewer from Codex, and verify its advice before acting.",
+  "author": {
+    "name": "chengming.ouyang"
+  },
+  "homepage": "https://github.com/OWNER/crosscheck",
+  "repository": "https://github.com/OWNER/crosscheck",
+  "license": "MIT",
+  "keywords": ["mcp", "claude", "code-review", "second-opinion", "multi-agent", "skeptical-review"],
+  "skills": "./skills/",
+  "mcpServers": {
+    "crosscheck": {
+      "command": "node",
+      "args": ["./server/crosscheck.mjs", "--peer", "claude"],
+      "cwd": ".",
+      "tool_timeout_sec": 1800,
+      "env_vars": [
+        "CROSSCHECK_TIMEOUT_SEC",
+        "CROSSCHECK_MAX_FOLLOWUPS",
+        "CROSSCHECK_CLAUDE_BIN",
+        "CROSSCHECK_CLAUDE_ARGS",
+        "CROSSCHECK_DEBUG",
+        "CROSSCHECK_DEPTH",
+        "ANTHROPIC_API_KEY",
+        "ANTHROPIC_AUTH_TOKEN",
+        "ANTHROPIC_BASE_URL",
+        "ANTHROPIC_MODEL",
+        "ANTHROPIC_CUSTOM_HEADERS",
+        "CLAUDE_CONFIG_DIR",
+        "CLAUDE_CODE_GIT_BASH_PATH",
+        "CLAUDE_CODE_USE_BEDROCK",
+        "CLAUDE_CODE_USE_VERTEX",
+        "CLAUDE_CODE_USE_FOUNDRY",
+        "AWS_PROFILE",
+        "AWS_REGION",
+        "AWS_ACCESS_KEY_ID",
+        "AWS_SECRET_ACCESS_KEY",
+        "AWS_SESSION_TOKEN",
+        "AWS_BEARER_TOKEN_BEDROCK",
+        "ANTHROPIC_VERTEX_PROJECT_ID",
+        "CLOUD_ML_REGION",
+        "GOOGLE_APPLICATION_CREDENTIALS",
+        "HTTPS_PROXY",
+        "HTTP_PROXY",
+        "NO_PROXY",
+        "NODE_EXTRA_CA_CERTS"
+      ]
+    }
+  },
+  "interface": {
+    "displayName": "Crosscheck",
+    "shortDescription": "Skeptical second opinions from Claude",
+    "longDescription": "Ask Claude, running read-only in your repository, to review a plan or diff or to solve a problem independently. Its claims come with evidence, and the bundled skill makes Codex verify every point before acting on it.",
+    "developerName": "chengming.ouyang",
+    "category": "Coding",
+    "capabilities": ["Read"],
+    "defaultPrompt": [
+      "Cross-check this plan with Claude before we implement it",
+      "Ask Claude to independently diagnose this bug, then compare"
+    ]
+  }
+}

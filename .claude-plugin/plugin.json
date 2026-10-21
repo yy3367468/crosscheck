@@ -1,0 +1,18 @@
+{
+  "name": "crosscheck",
+  "version": "0.1.0",
+  "description": "Consult Codex as a skeptical, read-only peer reviewer from Claude Code, and verify its advice before acting.",
+  "author": {
+    "name": "chengming.ouyang"
+  },
+  "homepage": "https://github.com/OWNER/crosscheck",
+  "repository": "https://github.com/OWNER/crosscheck",
+  "license": "MIT",
+  "keywords": ["mcp", "codex", "code-review", "second-opinion", "multi-agent", "skeptical-review"],
+  "mcpServers": {
+    "crosscheck": {
+      "command": "node",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/server/crosscheck.mjs", "--peer", "codex"]
+    }
+  }
+}
