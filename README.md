@@ -50,21 +50,19 @@ Install both CLIs if you want both directions.
 
 ## Install
 
-Replace `OWNER` with the GitHub account that hosts this repository.
-
 ### Claude Code (adds `ask_codex`)
 
 ```bash
-claude plugin marketplace add OWNER/crosscheck
+claude plugin marketplace add yy3367468/crosscheck
 claude plugin install crosscheck@crosscheck
 ```
 
-Or, inside a session: `/plugin marketplace add OWNER/crosscheck`, then `/plugin install crosscheck@crosscheck`. Restart Claude Code afterwards.
+Or, inside a session: `/plugin marketplace add yy3367468/crosscheck`, then `/plugin install crosscheck@crosscheck`. Restart Claude Code afterwards.
 
 ### Codex (adds `ask_claude`)
 
 ```bash
-codex plugin marketplace add OWNER/crosscheck
+codex plugin marketplace add yy3367468/crosscheck
 codex plugin add crosscheck@crosscheck
 ```
 

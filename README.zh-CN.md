@@ -50,21 +50,19 @@ Codex       ──ask_claude─▶ crosscheck ──▶ claude -p    （plan 模
 
 ## 安装
 
-把 `OWNER` 换成托管本仓库的 GitHub 账号。
-
 ### Claude Code（获得 `ask_codex`）
 
 ```bash
-claude plugin marketplace add OWNER/crosscheck
+claude plugin marketplace add yy3367468/crosscheck
 claude plugin install crosscheck@crosscheck
 ```
 
-也可以在会话里执行 `/plugin marketplace add OWNER/crosscheck`，再执行 `/plugin install crosscheck@crosscheck`。装完重启 Claude Code。
+也可以在会话里执行 `/plugin marketplace add yy3367468/crosscheck`，再执行 `/plugin install crosscheck@crosscheck`。装完重启 Claude Code。
 
 ### Codex（获得 `ask_claude`）
 
 ```bash
-codex plugin marketplace add OWNER/crosscheck
+codex plugin marketplace add yy3367468/crosscheck
 codex plugin add crosscheck@crosscheck
 ```
 

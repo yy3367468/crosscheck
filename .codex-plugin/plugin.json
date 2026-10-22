@@ -5,8 +5,8 @@
   "author": {
     "name": "chengming.ouyang"
   },
-  "homepage": "https://github.com/OWNER/crosscheck",
-  "repository": "https://github.com/OWNER/crosscheck",
+  "homepage": "https://github.com/yy3367468/crosscheck",
+  "repository": "https://github.com/yy3367468/crosscheck",
   "license": "MIT",
   "keywords": ["mcp", "claude", "code-review", "second-opinion", "multi-agent", "skeptical-review"],
   "skills": "./skills/",
