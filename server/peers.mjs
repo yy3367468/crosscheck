@@ -212,8 +212,14 @@ function firstLine(text) {
 
 function relativePath(cwd, file) {
   if (typeof file !== 'string') return '';
-  const rel = path.relative(cwd, file);
-  return rel && !rel.startsWith('..') && !path.isAbsolute(rel) ? rel.split(path.sep).join('/') : file;
+  // The peer may report symlink-resolved paths (macOS: /var -> /private/var).
+  let real = cwd;
+  try { real = fs.realpathSync.native(cwd); } catch {}
+  for (const base of new Set([cwd, real])) {
+    const rel = path.relative(base, file);
+    if (rel && !rel.startsWith('..') && !path.isAbsolute(rel)) return rel.split(path.sep).join('/');
+  }
+  return file;
 }
 
 // Codex reports shell commands wrapped in the shell that ran them, e.g.
