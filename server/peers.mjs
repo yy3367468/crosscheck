@@ -229,8 +229,41 @@ export function cleanCommand(command) {
   const match = text.match(/^"?[^"]*?(?:powershell|pwsh)(?:\.exe)?"?\s+(?:-\w+\s+)*?-Command\s+([\s\S]+)$/i)
     || text.match(/^\S*?\b(?:bash|zsh|sh)\s+-l?c\s+([\s\S]+)$/);
   if (match) text = match[1].trim();
-  if (/^(['"])[\s\S]*\1$/.test(text)) text = text.slice(1, -1);
+  text = unquoteWord(text) ?? text;
   return clip(text);
+}
+
+// Undoes POSIX shell quoting when the text is a single word, e.g.
+// 'a '"'"'b'"'"' c' -> a 'b' c. Returns null when it is not one quoted word.
+function unquoteWord(text) {
+  if (!/^['"]/.test(text)) return null;
+  let out = '';
+  for (let i = 0; i < text.length;) {
+    const ch = text[i];
+    if (ch === "'") {
+      const end = text.indexOf("'", i + 1);
+      if (end < 0) return null;
+      out += text.slice(i + 1, end);
+      i = end + 1;
+    } else if (ch === '"') {
+      let j = i + 1;
+      for (; j < text.length && text[j] !== '"'; j++) {
+        if (text[j] === '\\' && /["\\$`]/.test(text[j + 1] ?? '')) j++;
+        out += text[j];
+      }
+      if (j >= text.length) return null;
+      i = j + 1;
+    } else if (ch === '\\' && i + 1 < text.length) {
+      out += text[i + 1];
+      i += 2;
+    } else if (/\s/.test(ch)) {
+      return null;
+    } else {
+      out += ch;
+      i++;
+    }
+  }
+  return out;
 }
 
 const codex = {
@@ -375,12 +408,13 @@ const claude = {
   // --strict-mcp-config without --mcp-config starts it with no MCP servers, and
   // --setting-sources user ignores the reviewed repository's .claude/settings*.json,
   // whose hooks and permission rules would otherwise run with the user's rights.
+  // On Windows, Claude Code may expose PowerShell instead of Bash; unknown names are ignored.
   buildArgs({ sessionId, extraArgs }) {
     const args = ['-p', '--output-format', 'stream-json', '--verbose', ...extraArgs];
     if (sessionId) args.push('--resume', sessionId);
     args.push(
       '--permission-mode', 'plan',
-      '--tools', 'Read,Grep,Glob,Bash',
+      '--tools', 'Read,Grep,Glob,Bash,PowerShell',
       '--strict-mcp-config', '--disable-slash-commands',
       '--setting-sources', 'user',
     );
@@ -436,6 +470,7 @@ function describeClaudeTool(block, cwd) {
     case 'Glob':
       return clip(`Glob ${input.pattern ?? ''}${input.path ? ` in ${relativePath(cwd, input.path)}` : ''}`);
     case 'Bash':
+    case 'PowerShell':
       return clip(`$ ${input.command ?? ''}`);
     default:
       return clip(`${block.name} ${JSON.stringify(input)}`);

@@ -8,6 +8,7 @@ import os from 'node:os';
 import path from 'node:path';
 import readline from 'node:readline';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { cleanCommand } from '../server/peers.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SERVER = path.join(ROOT, 'server', 'crosscheck.mjs');
@@ -440,7 +441,7 @@ test('ask_claude runs claude in plan mode without MCP servers', TIMEOUT, async (
     assert.equal(echo.argv[0], '-p');
     assert.ok(hasPair(echo.argv, '--output-format', 'stream-json'));
     assert.ok(hasPair(echo.argv, '--permission-mode', 'plan'));
-    assert.ok(hasPair(echo.argv, '--tools', 'Read,Grep,Glob,Bash'));
+    assert.ok(hasPair(echo.argv, '--tools', 'Read,Grep,Glob,Bash,PowerShell'));
     assert.ok(echo.argv.includes('--strict-mcp-config'));
     assert.ok(echo.argv.includes('--disable-slash-commands'));
     assert.ok(hasPair(echo.argv, '--setting-sources', 'user'));
@@ -505,4 +506,12 @@ test('a missing peer CLI gives an actionable error', TIMEOUT, async () => {
     assert.equal(result.isError, true);
     assert.match(result.text, /was not found on PATH/);
   });
+});
+
+test('shell wrappers and their quoting are removed from reported commands', () => {
+  assert.equal(cleanCommand("/bin/bash -lc 'rg -n TODO src'"), 'rg -n TODO src');
+  assert.equal(cleanCommand(`"C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -Command 'git status'`), 'git status');
+  assert.equal(cleanCommand(`"C:\pwsh.exe" -Command '$n = 0; gc a | % { '"'"'{0}'"'"' -f $n }'`), "$n = 0; gc a | % { '{0}' -f $n }");
+  assert.equal(cleanCommand('/bin/zsh -lc "echo \\"hi\\" && ls"'), 'echo "hi" && ls');
+  assert.equal(cleanCommand('git status'), 'git status');
 });

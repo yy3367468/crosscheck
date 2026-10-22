@@ -24,7 +24,7 @@ A second model catches mistakes the first one misses, but only when neither side
 - **No API keys.** It drives the `codex` and `claude` CLIs you have already installed and logged in to.
 - **Read-only peers.**
   - Codex runs with `sandbox_mode=read-only` and approvals off. Its MCP servers, plugins, apps, memories and notify hook are disabled.
-  - Claude runs in plan mode with only `Read, Grep, Glob, Bash`, no MCP servers, no slash commands, and no settings from the reviewed repository.
+  - Claude runs in plan mode with only `Read, Grep, Glob, Bash` (`PowerShell` on Windows), no MCP servers, no slash commands, and no settings from the reviewed repository.
 - **Two modes.**
   - `independent`: the peer solves the problem without seeing your answer, which avoids anchoring.
   - `review`: the peer attacks a concrete plan, diff or claim.

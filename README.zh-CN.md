@@ -24,7 +24,7 @@ Codex       ──ask_claude─▶ crosscheck ──▶ claude -p    （plan 模
 - **无需 API Key。** 直接调用你已经安装并登录的 `codex` 和 `claude` 命令行。
 - **对方只读。**
   - Codex 以 `sandbox_mode=read-only` 运行，不弹审批；它自己的 MCP 服务、插件、apps、记忆和 notify 钩子全部关闭。
-  - Claude 以 plan 模式运行，只开放 `Read, Grep, Glob, Bash`，不加载 MCP 服务和斜杠命令，也不读取被评审仓库里的设置。
+  - Claude 以 plan 模式运行，只开放 `Read, Grep, Glob, Bash`（Windows 上为 `PowerShell`），不加载 MCP 服务和斜杠命令，也不读取被评审仓库里的设置。
 - **两种模式。**
   - `independent`：对方在看不到你答案的情况下独立求解，避免锚定。
   - `review`：让对方专门挑一个具体方案、diff 或论断的毛病。
