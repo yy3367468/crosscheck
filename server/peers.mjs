@@ -217,7 +217,8 @@ function relativePath(cwd, file) {
   try { real = fs.realpathSync.native(cwd); } catch {}
   for (const base of new Set([cwd, real])) {
     const rel = path.relative(base, file);
-    if (rel && !rel.startsWith('..') && !path.isAbsolute(rel)) return rel.split(path.sep).join('/');
+    const parts = rel.split(path.sep);
+    if (rel && parts[0] !== '..' && !path.isAbsolute(rel)) return parts.join('/');
   }
   return file;
 }

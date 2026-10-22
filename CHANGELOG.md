@@ -1,11 +1,13 @@
 # Changelog
 
-## Unreleased
+## 0.2.0 (2026-10-22)
 
 - Windows: Claude consultations can run shell commands again. Claude Code on Windows exposes `PowerShell` instead of `Bash`, so `--tools` now lists both.
 - Claude no longer tries to write a plan file or call ExitPlanMode in plan mode; the reviewer rules say the reply is the deliverable.
 - Activity lines show the command itself: nested shell quoting (e.g. PowerShell's `'"'"'`) is undone.
 - macOS: activity paths are shown relative to the workspace even when the peer reports symlink-resolved paths (`/private/var`).
+- Paths inside a subdirectory whose name starts with `..` (e.g. `..foo/`) are shown relative to the workspace instead of absolute.
+- README: an early-release notice (what was tested live, read-only strength per side, quota cost), and in the Chinese README a note on installing without access to github.com.
 
 ## 0.1.0
 

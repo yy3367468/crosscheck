@@ -14,6 +14,11 @@ Claude Code ──ask_codex──▶ crosscheck ──▶ codex exec   (read-onl
 Codex       ──ask_claude─▶ crosscheck ──▶ claude -p    (plan mode, read-only)
 ```
 
+> **Before you install**
+> - **Early release (0.x).** Live-tested on Windows with Codex CLI 0.163 and Claude Code 2.1.295. macOS and Linux are covered by the automated tests (with a fake peer), not yet by live runs. Bug reports are welcome.
+> - **Read-only strength differs by side.** Codex is confined by its OS sandbox. Claude runs in plan mode, which blocks edits but is not an OS sandbox (see [Security notes](#security-notes)).
+> - **Each consultation spends your quota for the other model** and can take from under a minute to several minutes.
+
 ## Why
 
 A second model catches mistakes the first one misses, but only when neither side simply defers. Models are prone to sycophancy: a reviewer that nods along, or a requester that accepts any confident-sounding advice, adds cost without adding judgement. crosscheck makes skepticism the default on **both** sides of the exchange, and reports when a review is not grounded in the code at all (for example, when the peer could not run any command).

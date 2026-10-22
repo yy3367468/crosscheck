@@ -435,6 +435,8 @@ test('ask_claude runs claude in plan mode without MCP servers', TIMEOUT, async (
     assert.match(result.text, /model claude-fake-1 · usage \$0\.0123 \(session total\)/);
     assert.match(result.text, /- Read src\/app\.js:10\n/);
     assert.match(result.text, /- Grep "TODO" in src \(\*\.js\)/);
+    assert.match(result.text, /- Read \.\.foo\/b\.js\n/);
+    assert.match(result.text, /- Read \S+[\\/]\.\.[\\/]outside\.js\n/);
     assert.match(result.text, /- \$ git diff HEAD/);
 
     const echo = peerEcho(result.text);

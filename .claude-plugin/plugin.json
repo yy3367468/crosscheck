@@ -1,6 +1,6 @@
 {
   "name": "crosscheck",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Consult Codex as a skeptical, read-only peer reviewer from Claude Code, and verify its advice before acting.",
   "author": {
     "name": "chengming.ouyang"

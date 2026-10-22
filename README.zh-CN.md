@@ -14,6 +14,11 @@ Claude Code ──ask_codex──▶ crosscheck ──▶ codex exec   （只读
 Codex       ──ask_claude─▶ crosscheck ──▶ claude -p    （plan 模式，只读）
 ```
 
+> **安装前须知**
+> - **早期版本（0.x）。** 已在 Windows 上用 Codex CLI 0.163、Claude Code 2.1.295 实测；macOS 和 Linux 目前只有自动化测试（使用模拟的对方 CLI），还没有实机验证。欢迎反馈问题。
+> - **两边的只读强度不同。** Codex 受操作系统级沙箱约束；Claude 运行在 plan 模式，能阻止编辑，但不是操作系统级沙箱（见[安全说明](#安全说明)）。
+> - **每次咨询都会消耗对方模型的额度**，耗时从不到一分钟到几分钟不等。
+
 ## 为什么要做这个
 
 第二个模型能发现第一个模型漏掉的问题，前提是双方都不盲从。模型天生容易讨好：评审一味点头，或者提问方对听起来自信的建议照单全收，都只会增加成本，不会带来更好的判断。crosscheck 把「怀疑」设为交流**双方**的默认姿态。如果一次评审根本没有基于代码（例如对方一条命令都没能执行），它也会明确告诉你。
@@ -47,6 +52,8 @@ Codex       ──ask_claude─▶ crosscheck ──▶ claude -p    （plan 模
 - 已登录的 [Claude Code](https://code.claude.com)：在 Codex 中使用 `ask_claude` 时需要
 
 要双向使用，就两个都装上。
+
+插件市场的安装命令需要从 github.com 拉取仓库。如果你的网络访问不了 github.com，可以先配置代理，或者 clone 到本地后按下文「不使用插件系统」的方式安装。
 
 ## 安装
 

@@ -11,7 +11,7 @@ import { fileURLToPath } from 'node:url';
 import { PEERS, UserError, CancelledError, consultPeer, killAll } from './peers.mjs';
 import { buildConsultPrompt, buildFollowupPrompt, toolDescription, SERVER_INSTRUCTIONS } from './prompts.mjs';
 
-const VERSION = '0.1.0';
+const VERSION = '0.2.0';
 const PROTOCOL_VERSIONS = ['2025-11-25', '2025-06-18', '2025-03-26', '2024-11-05'];
 const HEARTBEAT_MS = 15_000;
 const MAX_ACTIVITY_SHOWN = 20;

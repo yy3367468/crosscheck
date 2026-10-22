@@ -118,6 +118,8 @@ async function claude() {
   out({ type: 'assistant', parent_tool_use_id: null, message: { content: [
     { type: 'tool_use', id: 't1', name: 'Read', input: { file_path: `${process.cwd()}/src/app.js`, offset: 10 } },
     { type: 'tool_use', id: 't2', name: 'Grep', input: { pattern: 'TODO', path: `${process.cwd()}/src`, glob: '*.js' } },
+    { type: 'tool_use', id: 't5', name: 'Read', input: { file_path: `${process.cwd()}/..foo/b.js` } },
+    { type: 'tool_use', id: 't6', name: 'Read', input: { file_path: `${process.cwd()}/../outside.js` } },
   ] } });
   out({ type: 'user', message: { content: [{ type: 'tool_result', tool_use_id: 't1', content: '...' }] } });
   out({ type: 'assistant', parent_tool_use_id: null, message: { content: [{ type: 'tool_use', id: 't3', name: 'Bash', input: { command: 'git diff HEAD' } }] } });
