@@ -19,6 +19,35 @@ Codex       ──ask_claude─▶ crosscheck ──▶ claude -p    (plan mode,
 > - **Read-only strength differs by side.** Codex is confined by its OS sandbox. Claude runs in plan mode, which blocks edits but is not an OS sandbox (see [Security notes](#security-notes)).
 > - **Each consultation spends your quota for the other model** and can take from under a minute to several minutes.
 
+## Example: the reviewer holds its ground
+
+A real exchange with Codex about this repository, trimmed. First an `independent` question:
+
+> In server/crosscheck.mjs, how many follow-ups does one consultation allow by default, and what happens when the limit is reached?
+
+```text
+Codex replied after 59s. This is an unverified second opinion: check each claim against the code before acting on it.
+[verified] Each consultation allows 2 follow-ups by default, excluding the initial call. Once exhausted,
+further follow-ups return an error instructing the caller to decide from the evidence
+(server/crosscheck.mjs:29, server/crosscheck.mjs:225).
+Codex activity (3):
+- $ rg -n "follow.?up|limit|consult" server/crosscheck.mjs
+…
+```
+
+Then a follow-up that pushes a wrong claim:
+
+> I think you are wrong: the limit is 5 follow-ups, and when it is reached the server silently starts a fresh session. Re-check.
+
+```text
+Position: UNCHANGED — [verified] The code defaults to 2 follow-ups and rejects further requests when exhausted.
+- The default is explicitly nonNegativeInt(process.env.CROSSCHECK_MAX_FOLLOWUPS, 2): server/crosscheck.mjs:29
+- When session.followups >= config.maxFollowups, validation throws UserError: server/crosscheck.mjs:225
+[verified] Five follow-ups could be configured through CROSSCHECK_MAX_FOLLOWUPS; five is not the default.
+```
+
+The reviewer re-read the code, cited the lines, and did not give in to pushback. The requesting agent then checks those lines itself before acting.
+
 ## Why
 
 A second model catches mistakes the first one misses, but only when neither side simply defers. Models are prone to sycophancy: a reviewer that nods along, or a requester that accepts any confident-sounding advice, adds cost without adding judgement. crosscheck makes skepticism the default on **both** sides of the exchange, and reports when a review is not grounded in the code at all (for example, when the peer could not run any command).
@@ -190,9 +219,13 @@ skills/crosscheck/       the skill both agents load
 
 ## Related work
 
-[openai/codex-plugin-cc](https://github.com/openai/codex-plugin-cc) (Claude → Codex reviews), [PAL MCP server](https://github.com/BeehiveInnovations/pal-mcp-server) (multi-model tools), and [GuDaStudio/codexmcp](https://github.com/GuDaStudio/codexmcp) (Codex as an MCP tool) inspired parts of this project. crosscheck's focus is narrower:
-- symmetric Claude Code ⇄ Codex consultation through existing CLI logins;
-- an explicit skeptical protocol on both the reviewer side and the requester side.
+These projects inspired parts of crosscheck. Pick by what you need:
+
+| Project | What it does | How crosscheck differs |
+|---|---|---|
+| [openai/codex-plugin-cc](https://github.com/openai/codex-plugin-cc) | Official Codex plugin for Claude Code: `/codex:review` and `/codex:adversarial-review` (read-only), plus `/codex:rescue` to delegate tasks to Codex, background jobs and session transfer. | Works in both directions (Codex can also ask Claude), and adds a protocol for the requesting agent: verify every claim, dispute with evidence for at most two rounds, then decide and report. If you mainly want Codex reviews or to hand work to Codex from Claude Code, use the official plugin. |
+| [GuDaStudio/codexmcp](https://github.com/GuDaStudio/codexmcp) | Codex as an MCP tool for Claude Code, with session persistence, parallel tasks and a choice of sandbox modes, including write access. | Read-only by design in both directions; the peer must back claims with evidence. |
+| [PAL MCP server](https://github.com/BeehiveInnovations/pal-mcp-server) | Multi-model workflows (consensus, code review, CLI-to-CLI bridge) across many providers, through API keys or external CLIs. | Narrower: only Claude Code ⇄ Codex through the CLIs you already use, no API keys, zero dependencies. |
 
 ## License
 

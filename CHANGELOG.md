@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- README: a real example exchange with Codex (independent question, then a wrong claim that the reviewer rejects with evidence), and a comparison table with openai/codex-plugin-cc, GuDaStudio/codexmcp and PAL MCP server. The Chinese README gains both sections.
+
 ## 0.2.0 (2026-10-22)
 
 - Windows: Claude consultations can run shell commands again. Claude Code on Windows exposes `PowerShell` instead of `Bash`, so `--tools` now lists both.

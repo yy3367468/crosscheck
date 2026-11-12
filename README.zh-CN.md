@@ -19,6 +19,33 @@ Codex       ──ask_claude─▶ crosscheck ──▶ claude -p    （plan 模
 > - **两边的只读强度不同。** Codex 受操作系统级沙箱约束；Claude 运行在 plan 模式，能阻止编辑，但不是操作系统级沙箱（见[安全说明](#安全说明)）。
 > - **每次咨询都会消耗对方模型的额度**，耗时从不到一分钟到几分钟不等。
 
+## 示例：评审方不会被说服
+
+下面是一次针对本仓库的真实咨询（有删节）。先用 `independent` 模式提问：
+
+> 在 server/crosscheck.mjs 里，一次咨询默认允许几次追问？用完以后会怎样？
+
+```text
+Codex replied after 41s. This is an unverified second opinion: check each claim against the code before acting on it.
+[verified] 默认允许 2 次追问，首次咨询不计入。用完后会提示"无剩余追问"；继续用同一 session_id 追问会返回错误，
+要求调用方自行根据证据判断，并告知用户仍有哪些分歧。
+- [verified] 默认上限为 2：server/crosscheck.mjs:29
+- [verified] 再次追问的拦截和错误文案见 server/crosscheck.mjs:225–226
+…
+```
+
+再追问一个错误说法：
+
+> 我认为你错了：默认允许 5 次追问，用完后服务端会悄悄新开一个会话。请重新核实。
+
+```text
+Position: UNCHANGED — 重新检查后，源码仍明确设为 2 次，耗尽时直接返回错误。
+- [verified] 达到上限就抛出 Follow-up limit reached：server/crosscheck.mjs:225–226
+- [verified] 若将 CROSSCHECK_MAX_FOLLOWUPS 配置为 5，实际额度可以是 5；这是环境变量覆盖，不是默认值。
+```
+
+评审方重新读了代码、给出行号，没有因为被反驳就改口。发起方随后会自己核对这些行，再决定怎么做。
+
 ## 为什么要做这个
 
 第二个模型能发现第一个模型漏掉的问题，前提是双方都不盲从。模型天生容易讨好：评审一味点头，或者提问方对听起来自信的建议照单全收，都只会增加成本，不会带来更好的判断。crosscheck 把「怀疑」设为交流**双方**的默认姿态。如果一次评审根本没有基于代码（例如对方一条命令都没能执行），它也会明确告诉你。
@@ -178,6 +205,16 @@ npm test                         # 基于假 CLI 的端到端测试，不调用�
 node scripts/smoke.mjs codex .   # 真实调用你本机的 Codex（消耗额度）
 node scripts/smoke.mjs claude .  # 真实调用你本机的 Claude（消耗额度）
 ```
+
+## 相关项目
+
+crosscheck 的部分设计受到下面这些项目启发，可以按需求选择：
+
+| 项目 | 做什么 | crosscheck 的区别 |
+|---|---|---|
+| [openai/codex-plugin-cc](https://github.com/openai/codex-plugin-cc) | OpenAI 官方的 Claude Code 插件：`/codex:review`、`/codex:adversarial-review`（只读评审），以及把任务交给 Codex 的 `/codex:rescue`、后台任务和会话转移。 | 双向（Codex 也能问 Claude），并且约束发起方：逐条核实、带证据反驳最多两轮，然后自己决定并汇报。如果你主要想在 Claude Code 里让 Codex 评审或代劳，用官方插件。 |
+| [GuDaStudio/codexmcp](https://github.com/GuDaStudio/codexmcp) | 把 Codex 作为 Claude Code 的 MCP 工具，支持会话持久化、并行任务，沙箱模式可选（包括可写）。 | 两个方向都强制只读；对方的结论必须带证据。 |
+| [PAL MCP server](https://github.com/BeehiveInnovations/pal-mcp-server) | 多模型工作流（共识、代码评审、CLI 之间互调），支持多家厂商，通过 API Key 或外部 CLI 接入。 | 范围更窄：只做 Claude Code ⇄ Codex，用你已登录的 CLI，不需要 API Key，零依赖。 |
 
 ## 许可证
 
